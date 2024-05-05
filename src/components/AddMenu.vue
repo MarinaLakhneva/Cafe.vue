@@ -31,8 +31,9 @@
 				</div>
 			</div>
 			<div class="result">
-				<p class="sum">Промежуточный итог :</p>
-				<p style="font-size: 24px">1400 р</p>
+				<p class="total">Промежуточный итог :</p>
+				<p class="balance" style="font-size: 24px">1400 р</p>
+				<p>Плательщик :</p>
 			</div>
 			<a class="back" href="/">Назад</a>
 		</form>
@@ -147,7 +148,10 @@ form{
 	background-color: #5f5f5f;
 	margin-top: 100px;
 }
-.sum{
-	margin-bottom: 20px;
+.total{
+}
+.balance{
+	margin-top: 20px;
+	margin-bottom: 40px ;
 }
 </style>
