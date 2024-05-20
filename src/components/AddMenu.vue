@@ -1,61 +1,86 @@
 <template>
 	<div class="main">
 		<form id="menu">
-			<button class="addMenu" type="button" @click="add()">
+			<button class="addMenu" type="button" @click="storeMenu.add()">
         <span class="add">
           <img class="plus" width="30" src="../assets/plus.svg">
           <p>Добавить позицию</p>
         </span>
 			</button>
 			<div class="input">
-				<div class="inputMenu" v-for="(input, k) in inputsPrice" :key="k">
+				<div class="inputMenu" v-for="(menu) in storeMenu.inputsPrice" :key=menu.id>
 					<div class="setting">
-						<button class="deleteMenu" type="button" @click="remove(k)" v-show="k || ( !k && inputsPrice.length >= 1)">-</button>
+						<button class="deleteMenu" type="button" @click="storeMenu.remove(menu.id)">-</button>
 						<input
+								class="info"
 								type="text"
-								:id="'product' + k"
-								:name="'product' + k"
-								v-model="input.product"
+								:id="'product' + menu.id"
+								:name="'product' + menu.id"
+								v-model="menu.product"
 								placeholder="Название">
 						<input
+								class="info"
 								type="number"
-								:id="'price' + k"
-								:name="'price' + k"
-								v-model="input.price"
+								:id="'price' + menu.id"
+								:name="'price' + menu.id"
+								v-model="menu.price"
 								placeholder="Цена">
-						<button class="persons" type="button" @click="togglePersons(k)">+</button>
+						<button class="showPerson" type="button" @click="storeMenu.togglePersons(menu.id)">+</button>
 					</div>
-					<div class="container" v-if="input.showPersons">
-						<p style="color: #06c719">PERSON</p>
+					<div class="container" v-if="menu.showPerson">
+						<div class="persons" v-for="person in storePerson.inputsPerson" :key=person.id>
+							<input
+									type="checkbox"
+									:id="'name' + person.id"
+									:name="'name' + person.id"
+									:value=person.id
+									v-model="menu.personsId"
+							>
+							<label>{{person.name}}</label>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="result">
-				<p class="total">Промежуточный итог :</p>
-				<p class="balance" style="font-size: 24px">1400 р</p>
-				<p>Плательщик :</p>
+				<p class="total">Промежуточный итог : {{resultPrice}}</p>
 			</div>
-			<a class="back" href="/">Назад</a>
+			<div class="buttons">
+				<button class="nav" type="button" @click="back()">Назад</button>
+				<button class="nav" type="button" @click="forth()">Далее</button>
+			</div>
 		</form>
 	</div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const inputsPrice = ref([{ product: '', price: '', showPersons: false }]);
-const add = () => {
-	inputsPrice.value.push({ product: '', price: '', showPersons: false });
-}
-const remove = (index) => {
-	inputsPrice.value.splice(index, 1);
-}
-const togglePersons = (index) => {
-	inputsPrice.value[index].showPersons = !inputsPrice.value[index].showPersons;
-	console.log()
-}
+const router = useRouter();
+import {useRouter} from "vue-router";
+import {computed} from "@vue/reactivity";
+
+import {useStorePerson} from "../stores/PersonStore"
+import {useStoreMenu} from "../stores/MenuStore"
+
+const storePerson = useStorePerson();
+const storeMenu = useStoreMenu();
+
+const resultPrice = computed(() => {
+	let  sum = 0;
+	storeMenu.inputsPrice.forEach(item => sum += item.price);
+	return sum;
+})
+
+const back = () => {
+	router.push('/');
+};
+const forth = () => {
+	router.push('/result');
+};
 </script>
 
 <style scoped>
+button{
+	color: #06c719;
+}
 .main{
 	display: flex;
 	justify-content: center;
@@ -68,7 +93,7 @@ const togglePersons = (index) => {
 	width: 500px;
 	max-width: 100%;
 }
-input{
+.info{
 	padding: 10px;
 	width: 200px;
 	border: 1px solid #7c7c7c;
@@ -89,7 +114,6 @@ form{
 	border: 1px solid #7c7c7c;
 	background-color: #5f5f5f;
 	font-size: 18px;
-	color: #06c719;
 }
 .plus{
 	margin-right: 10px;
@@ -101,7 +125,7 @@ form{
 	padding: 5px;
 }
 .input{
-	max-height: 300px;
+	max-height: 280px;
 	overflow-y: auto;
 }
 .setting{
@@ -116,15 +140,44 @@ form{
 	border: none;
 	background-color: #414141;
 	font-size: 18px;
-	color: #06c719;
 }
-.persons{
+.showPerson{
 	border: none;
 	background-color: #414141;
 	font-size: 18px;
+}
+.container{
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+	padding: 10px;
+	width: 480px;
+	border: 1px solid #7c7c7c;
+	background-color: #5f5f5f;
+	max-height: 60px;
+	overflow-y: auto;
+	div:not(:last-child) {
+		margin-right: 10px;
+	}
+}
+.persons{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	width: 100px;
 	color: #06c719;
 }
-.back{
+.result{
+	margin-top: 50px;
+	padding: 20px;
+	width: 400px;
+	border: 1px solid #7c7c7c;
+	background-color: #5f5f5f;
+}
+.total{
+	font-size: 22px;
+}
+.nav{
 	margin-top: 30px;
 	padding: 5px 0;
 	width: 100px;
@@ -132,26 +185,10 @@ form{
 	border: 1px solid #7c7c7c;
 	background-color: #5f5f5f;
 	font-size: 18px;
-	color: #06c719;
 }
-.container{
-	margin-top: 20px;
-	padding: 10px;
-	width: 480px;
-	border: 1px solid #7c7c7c;
-	background-color: #5f5f5f;
-}
-.result{
-	padding: 20px;
-	width: 400px;
-	border: 1px solid #7c7c7c;
-	background-color: #5f5f5f;
-	margin-top: 100px;
-}
-.total{
-}
-.balance{
-	margin-top: 20px;
-	margin-bottom: 40px ;
+.buttons{
+	display: flex;
+	justify-content: space-between;
+	width: 250px;
 }
 </style>

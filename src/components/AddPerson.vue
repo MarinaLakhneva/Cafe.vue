@@ -1,15 +1,15 @@
 <template>
 	<div class="main">
 		<form id="person">
-			<button class="addPerson" type="button" @click="add()">
+			<button class="addPerson" type="button" @click="storePerson.add()">
         <span class="add">
           <img class="plus" width="30" src="../assets/plus.svg">
           <p>Добавить человека</p>
         </span>
 			</button>
 			<div class="input">
-				<div class="inputPerson" v-for="(input, k) in inputsPerson" :key="k">
-					<button class="deletePerson" type="button" @click="remove(k)" v-show="k || ( !k && inputsPerson.length >= 1)">-</button>
+				<div class="inputPerson" v-for="(input, k) in storePerson.inputsPerson" :key="k">
+					<button class="deletePerson" type="button" @click="storePerson.remove(k)" v-show="k || ( !k && storePerson.inputsPerson.length >= 1)">-</button>
 					<input
 							type="text"
 							:id="'name' + k"
@@ -24,21 +24,14 @@
 </template>
 
 <script setup>
-	import { ref } from 'vue';
+	import {useStorePerson} from "../stores/PersonStore"
 	const router = useRouter();
 	import {useRouter} from "vue-router";
 
-	const inputsPerson = ref([{ name: '' }]);
-
-	const add = () => {
-		inputsPerson.value.push({ name: '' });
-	}
-	const remove = (index) => {
-		inputsPerson.value.splice(index, 1);
-	}
+	const storePerson = useStorePerson();
 	const forth = () => {
 		router.push('/menu');
-	}
+	};
 </script>
 
 <style scoped>
