@@ -3,7 +3,7 @@
 		<form id="menu">
 			<button class="addMenu" type="button" @click="storeMenu.add()">
         <span class="add">
-          <img class="plus" width="30" src="../assets/plus.svg">
+          <img class="plus" width="30" src="../assets/plus.svg" alt="plus">
           <p>Добавить позицию</p>
         </span>
 			</button>
@@ -23,26 +23,46 @@
 								type="number"
 								:id="'price' + menu.id"
 								:name="'price' + menu.id"
+								min="0"
 								v-model="menu.price"
 								placeholder="Цена">
-						<button class="showPerson" type="button" @click="storeMenu.togglePersons(menu.id)">+</button>
+						<button class="showPersons" type="button" @click="storeMenu.togglePersons(menu.id)">+</button>
 					</div>
-					<div class="container" v-if="menu.showPerson">
-						<div class="persons" v-for="person in storePerson.inputsPerson" :key=person.id>
-							<input
-									type="checkbox"
-									:id="'name' + person.id"
-									:name="'name' + person.id"
-									:value=person.id
-									v-model="menu.personsId"
-							>
-							<label>{{person.name}}</label>
+					<div class="container" v-if="menu.showPersons">
+						<div class="personsEat">
+							<div class="persons" v-for="person in storePerson.inputsPerson" :key=person.id>
+								<input
+										type="checkbox"
+										:id="'person' + person.id"
+										:name="'person' + person.id"
+										:value="person.id"
+										v-model="menu.personsId"
+								>
+								<label>{{person.name}}</label>
+							</div>
+						</div>
+						<div class="payer">
+							<button class="showPayers" type="button" @click="storeMenu.togglePayer(menu.id)">
+								<img width="30" src="../assets/money.png" alt="money">
+							</button>
+							<div class="personsPay" v-if="menu.showPayer">
+								<div class="persons" v-for="payer in storePerson.inputsPerson" :key=payer.id>
+									<input
+											type="radio"
+											:id="'payer' + menu.id"
+											:name="'payer' + menu.id"
+											:value="payer.id"
+											v-model="menu.payerId"
+									>
+									<label>{{payer.name}}</label>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="result">
-				<p class="total">Промежуточный итог : {{resultPrice}}</p>
+				<p class="total">Промежуточный итог : {{resultPrice}} руб</p>
 			</div>
 			<div class="buttons">
 				<button class="nav" type="button" @click="back()">Назад</button>
@@ -65,7 +85,7 @@ const storeMenu = useStoreMenu();
 
 const resultPrice = computed(() => {
 	let  sum = 0;
-	storeMenu.inputsPrice.forEach(item => sum += item.price);
+	storeMenu.inputsPrice.forEach(item => sum += Number(item.price));
 	return sum;
 })
 
@@ -125,7 +145,7 @@ form{
 	padding: 5px;
 }
 .input{
-	max-height: 280px;
+	max-height: 400px;
 	overflow-y: auto;
 }
 .setting{
@@ -141,31 +161,44 @@ form{
 	background-color: #414141;
 	font-size: 18px;
 }
-.showPerson{
+.showPersons{
 	border: none;
 	background-color: #414141;
 	font-size: 18px;
 }
 .container{
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	margin-top: 20px;
 	padding: 10px;
 	width: 480px;
 	border: 1px solid #7c7c7c;
 	background-color: #5f5f5f;
-	max-height: 60px;
+	max-height: 100px;
 	overflow-y: auto;
-	div:not(:last-child) {
-		margin-right: 10px;
-	}
+}
+.personsEat{
+	display: flex;
+	flex-direction: column;
 }
 .persons{
 	display: flex;
-	flex-direction: row;
 	justify-content: flex-start;
-	width: 100px;
+	width: 150px;
 	color: #06c719;
+}
+.payer{
+	display: flex;
+}
+.showPayers{
+	display: flex;
+	justify-content: flex-start;
+	margin-left: 50px;
+	border: none;
+	background-color: #5f5f5f;
+}
+.personsPay{
+	margin-left: 20px;
 }
 .result{
 	margin-top: 50px;
