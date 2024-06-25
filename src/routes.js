@@ -3,11 +3,13 @@ import AddPerson from './components/AddPerson.vue';
 import AddMenu from './components/AddMenu.vue';
 import ResultPrice from "./components/ResultPrice.vue";
 
-export default createRouter({
+const router = createRouter({
 	history: createWebHashHistory(),
 	routes: [
-		{ path: '/', component: AddPerson},
-		{ path: '/menu', component: AddMenu},
-		{ path: '/result', component: ResultPrice},
+		{ path: '/', component: AddPerson, name: "persons"},
+		{ path: '/menu', component: AddMenu, name: "menu"},
+		{ path: '/result', component: ResultPrice, name: "price"},
 	],
 })
+
+export default router;
