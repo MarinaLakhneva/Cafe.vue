@@ -56,6 +56,7 @@ import { computed } from 'vue';
 const calculatedPrices = computed(() => {
 	const personPrice = storePerson.inputsPerson;
 	const result = {price: [], person_name: []};
+	console.log(result);
 
 	for (let i = 0; i < storeMenu.inputsPrice.length; i++) {
 		let infoProduct = storeMenu.inputsPrice[i];

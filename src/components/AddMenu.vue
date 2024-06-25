@@ -42,9 +42,7 @@
 							</div>
 						</div>
 						<div class="payer">
-							<button class="showPayers" type="button" @click="storeMenu.togglePayer(menu.id)">
-								<img width="30" src="../assets/money.png" alt="money">
-							</button>
+							<button class="showPayers" type="button" @click="storeMenu.togglePayer(menu.id)">Payer</button>
 							<div class="personsPay" v-if="menu.showPayer">
 								<div class="persons" v-for="payer in storePerson.inputsPerson" :key=payer.id>
 									<input
@@ -82,6 +80,7 @@ import {useStoreMenu} from "../stores/MenuStore"
 
 const storePerson = useStorePerson();
 const storeMenu = useStoreMenu();
+const menu = storeMenu.inputsPrice;
 
 const resultPrice = computed(() => {
 	let  sum = 0;
@@ -93,7 +92,17 @@ const back = () => {
 	router.push('/');
 };
 const forth = () => {
-	router.push('/result');
+	if(menu.length !== 0){
+		let j = 0;
+		for (let i = 0; i < menu.length; i++) {
+			if(menu[i].product === "" || menu[i].price === "" || menu[i].payerId === "" || menu[i].personsId === "") {
+				j++;
+			}
+		}
+		if(j === 0){
+			router.push('/result');
+		}
+	}
 };
 </script>
 
@@ -191,10 +200,16 @@ form{
 	display: flex;
 }
 .showPayers{
-	display: flex;
-	justify-content: flex-start;
+	cursor: pointer;
 	margin-left: 50px;
-	border: none;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #7c7c7c;
+	color: #ffffff;
+	background-color: #06c719;
+}
+.showPayers:hover {
+	color: #06c719;
 	background-color: #5f5f5f;
 }
 .personsPay{

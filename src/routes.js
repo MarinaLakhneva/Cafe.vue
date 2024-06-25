@@ -6,8 +6,8 @@ import ResultPrice from "./components/ResultPrice.vue";
 export default createRouter({
 	history: createWebHashHistory(),
 	routes: [
-		{ path: '/', component: AddPerson, alias: '/'},
-		{ path: '/menu', component: AddMenu },
-		{ path: '/result', component: ResultPrice },
-	]
+		{ path: '/', component: AddPerson},
+		{ path: '/menu', component: AddMenu},
+		{ path: '/result', component: ResultPrice},
+	],
 })

@@ -27,10 +27,21 @@
 	import {useStorePerson} from "../stores/PersonStore"
 	const router = useRouter();
 	import {useRouter} from "vue-router";
-
 	const storePerson = useStorePerson();
+	const persons = storePerson.inputsPerson;
+
 	const forth = () => {
-		router.push('/menu');
+		if(persons.length !== 0){
+			let j = 0;
+			for (let i = 0; i < persons.length; i++) {
+				if(persons[i].name === "") {
+					j++;
+				}
+			}
+			if(j === 0){
+				router.push('/menu');
+			}
+		}
 	};
 </script>
 
