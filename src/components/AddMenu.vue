@@ -26,7 +26,9 @@
 								min="0"
 								v-model="menu.price"
 								placeholder="Цена">
-						<button class="showPersons" type="button" @click="storeMenu.togglePersons(menu.id)">+</button>
+						<button class="showPersons" type="button" @click="storeMenu.togglePersons(menu.id)">
+							<img class="settings" width="20" src="../assets/settings.png" alt="settings">
+						</button>
 					</div>
 					<div class="container" v-if="menu.showPersons">
 						<div class="personsEat">
@@ -42,7 +44,7 @@
 							</div>
 						</div>
 						<div class="payer">
-							<button class="showPayers" type="button" @click="storeMenu.togglePayer(menu.id)">Payer</button>
+							<button class="showPayers" type="button" @click="storeMenu.togglePayer(menu.id)">Платит</button>
 							<div class="personsPay" v-if="menu.showPayer">
 								<div class="persons" v-for="payer in storePerson.inputsPerson" :key=payer.id>
 									<input
@@ -104,6 +106,7 @@ const forth = () => {
 		}
 	}
 };
+
 </script>
 
 <style scoped>

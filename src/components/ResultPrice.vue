@@ -19,7 +19,7 @@
 					<div class="debtors" v-if="calculatedArrears">
 						<div class="debtor">
 							<div v-for="(debtor, index) in calculatedArrears.debtor_name" :key="index">
-								{{debtor}}  должна
+								{{debtor}}  переведи
 							</div>
 						</div>
 						<div class="payer">
@@ -93,10 +93,19 @@ const calculatedArrears = computed(() => {
 			let payerId = infoProduct.payerId;
 			const person = personPrice.find(item => item.id === personId);
 			const payer = personPrice.find(item => item.id === payerId);
+			const arr = ['а','я']
 			if (payer.name !== person.name) {
-				result.payer_name.push(payer.name.slice(0, -1) + 'е');
-				result.debtor_name.push(person.name);
-				result.debt.push(price / persons_length);
+				const ch  = payer.name.slice(-1).toLowerCase();
+				if(arr.includes(ch)) {
+					result.payer_name.push(payer.name.slice(0, -1) + 'е');
+					result.debtor_name.push(person.name);
+					result.debt.push(price / persons_length).toFixed(2);
+				}
+				else {
+					result.payer_name.push(payer.name + 'у');
+					result.debtor_name.push(person.name);
+					result.debt.push(price / persons_length).toFixed(2);
+				}
 			}
 		}
 	}
