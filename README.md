@@ -1,24 +1,6 @@
 # cafe
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Создать приложение для деления чека/счёта на нескольких людей. Сначала
+вводятся по очереди люди, потом вводятся продукты, каждому продукту
+указывается цена и тот, кто его “использовал” (ел/пил), после чего считается
+сколько денег “потратил” каждый человек.

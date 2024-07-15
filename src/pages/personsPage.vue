@@ -1,32 +1,57 @@
 <template>
 	<div class="main">
 		<form id="person">
-			<button class="addPerson" type="button" @click="storePerson.add()">
-        <span class="add">
-          <img class="plus" width="30" src="../assets/plus.svg">
+			<v-btn
+					class="addPerson"
+					type="button"
+					@click="storePerson.add()"
+			>
+        <div class="add">
+          <img
+							class="plus"
+							width="30"
+							src="../assets/plus.svg"
+							alt="plus"
+					>
           <p>Добавить человека</p>
-        </span>
-			</button>
+        </div>
+			</v-btn>
 			<div class="input">
 				<div class="inputPerson" v-for="(input, k) in storePerson.inputsPerson" :key="k">
-					<button class="deletePerson" type="button" @click="storePerson.remove(k)" v-show="k || ( !k && storePerson.inputsPerson.length >= 1)">-</button>
+					<v-btn
+							class="deletePerson"
+							type="button"
+							@click="storePerson.remove(k)" v-show="k || (!k && storePerson.inputsPerson.length >= 1)"
+					>
+						-
+					</v-btn>
 					<input
 							type="text"
 							:id="'name' + k"
 							:name="'name' + k"
+							maxlength="15"
 							v-model="input.name"
-							placeholder="имя">
+							placeholder="имя"
+					>
 				</div>
 			</div>
-			<button class="forth" type="button" @click="forth()">Далее</button>
+			<v-btn
+					class="forth"
+					type="button"
+					@click="forth()"
+			>
+				Далее
+			</v-btn>
 		</form>
 	</div>
 </template>
 
 <script setup>
-	import {useStorePerson} from "../stores/PersonStore"
-	const router = useRouter();
+	import {useStorePerson} from "@/stores/PersonStore"
 	import {useRouter} from "vue-router";
+
+	const router = useRouter();
+
 	const storePerson = useStorePerson();
 	const persons = storePerson.inputsPerson;
 

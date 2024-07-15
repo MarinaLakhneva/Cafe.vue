@@ -26,8 +26,9 @@ a{
 input{
 	outline: none;
 }
-button{
+v-btn{
 	padding: 0;
 	margin: 0;
+	color: #06c719;
 }
 </style>

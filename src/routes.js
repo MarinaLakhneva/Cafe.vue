@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import AddPerson from './components/AddPerson.vue';
-import AddMenu from './components/AddMenu.vue';
-import ResultPrice from "./components/ResultPrice.vue";
+import AddPerson from '@/pages/personsPage.vue';
+import AddMenu from '@/pages/menuPage.vue';
+import ResultPrice from "@/pages/resultsPage.vue";
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -10,20 +10,6 @@ const router = createRouter({
 		{ path: '/menu', component: AddMenu, name: "menu",},
 		{ path: '/result', component: ResultPrice, name: "price"},
 	],
-});
-
-router.beforeEach((to, from, next) => {
-	if (to.name !== 'persons'){
-		if (from.name === undefined) {
-			next('/');
-		}
-		else{
-			next();
-		}
-	}
-	else{
-		next();
-	}
 });
 
 export default router;

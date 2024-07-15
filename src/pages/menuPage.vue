@@ -1,34 +1,63 @@
 <template>
 	<div class="main">
 		<form id="menu">
-			<button class="addMenu" type="button" @click="storeMenu.add()">
-        <span class="add">
-          <img class="plus" width="30" src="../assets/plus.svg" alt="plus">
+			<v-btn
+					class="addMenu"
+					type="button"
+					@click="storeMenu.add()"
+			>
+        <div class="add">
+          <img
+							class="plus"
+							width="30"
+							src="../assets/plus.svg"
+							alt="plus"
+					>
           <p>Добавить позицию</p>
-        </span>
-			</button>
+        </div>
+			</v-btn>
 			<div class="input">
 				<div class="inputMenu" v-for="(menu) in storeMenu.inputsPrice" :key=menu.id>
 					<div class="setting">
-						<button class="deleteMenu" type="button" @click="storeMenu.remove(menu.id)">-</button>
+						<v-btn
+								class="deleteMenu"
+								type="button"
+								@click="storeMenu.remove(menu.id)"
+						>
+							-
+						</v-btn>
 						<input
 								class="info"
 								type="text"
 								:id="'product' + menu.id"
 								:name="'product' + menu.id"
+								maxlength="15"
 								v-model="menu.product"
-								placeholder="Название">
+								placeholder="Название"
+						>
 						<input
 								class="info"
-								type="number"
+								type="text"
 								:id="'price' + menu.id"
 								:name="'price' + menu.id"
-								min="0"
+								maxlength="6"
 								v-model="menu.price"
-								placeholder="Цена">
-						<button class="showPersons" type="button" @click="storeMenu.togglePersons(menu.id)">
-							<img class="settings" width="20" src="../assets/settings.png" alt="settings">
-						</button>
+								placeholder="Цена"
+								pattern="[0-9]*"
+								title="Пожалуйста, введите только цифры"
+						>
+						<v-btn
+								class="showPersons"
+								type="button"
+								@click="storeMenu.togglePersons(menu.id)"
+						>
+							<img
+									class="settings"
+									width="20"
+									src="../assets/settings.png"
+									alt="settings"
+							>
+						</v-btn>
 					</div>
 					<div class="container" v-if="menu.showPersons">
 						<div class="personsEat">
@@ -44,7 +73,13 @@
 							</div>
 						</div>
 						<div class="payer">
-							<button class="showPayers" type="button" @click="storeMenu.togglePayer(menu.id)">Платит</button>
+							<v-btn
+									class="showPayers"
+									type="button"
+									@click="storeMenu.togglePayer(menu.id)"
+							>
+								Платит
+							</v-btn>
 							<div class="personsPay" v-if="menu.showPayer">
 								<div class="persons" v-for="payer in storePerson.inputsPerson" :key=payer.id>
 									<input
@@ -65,29 +100,40 @@
 				<p class="total">Промежуточный итог : {{resultPrice}} руб</p>
 			</div>
 			<div class="buttons">
-				<button class="nav" type="button" @click="back()">Назад</button>
-				<button class="nav" type="button" @click="forth()">Далее</button>
+				<v-btn
+						class="nav"
+						type="button"
+						@click="back()"
+				>
+					Назад
+				</v-btn>
+				<v-btn
+						class="nav"
+						type="button"
+						@click="forth()"
+				>
+					Далее
+				</v-btn>
 			</div>
 		</form>
 	</div>
 </template>
 
 <script setup>
-const router = useRouter();
 import {useRouter} from "vue-router";
 import {computed} from "@vue/reactivity";
 
-import {useStorePerson} from "../stores/PersonStore"
-import {useStoreMenu} from "../stores/MenuStore"
+import {useStorePerson} from "@/stores/PersonStore"
+import {useStoreMenu} from "@/stores/MenuStore"
+
+const router = useRouter();
 
 const storePerson = useStorePerson();
 const storeMenu = useStoreMenu();
 const menu = storeMenu.inputsPrice;
 
 const resultPrice = computed(() => {
-	let  sum = 0;
-	storeMenu.inputsPrice.forEach(item => sum += Number(item.price));
-	return sum;
+	return storeMenu.inputsPrice.reduce((sum, current) => sum + Number(current.price), 0);
 })
 
 const back = () => {
@@ -106,7 +152,6 @@ const forth = () => {
 		}
 	}
 };
-
 </script>
 
 <style scoped>

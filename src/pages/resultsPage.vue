@@ -6,65 +6,82 @@
 				<div style="color: #06c719">
 					<div class="info" v-if="calculatedPrices">
 						<div class="person">
-							<div v-for="(person, index) in calculatedPrices.person_name" :key="index">
+							<p v-for="(person, index) in calculatedPrices.person_name" :key="index">
 								{{person}}
-							</div>
+							</p>
 						</div>
 						<div class="price">
-							<div v-for="(price, index) in calculatedPrices.price" :key="index">
+							<p v-for="(price, index) in calculatedPrices.price" :key="index">
 								{{price}} руб
-							</div>
+							</p>
 						</div>
 					</div>
 					<div class="debtors" v-if="calculatedArrears">
 						<div class="debtor">
-							<div v-for="(debtor, index) in calculatedArrears.debtor_name" :key="index">
+							<p v-for="(debtor, index) in calculatedArrears.debtor_name" :key="index">
 								{{debtor}}  переведи
-							</div>
+							</p>
 						</div>
 						<div class="payer">
-							<div v-for="(payer, index) in calculatedArrears.payer_name" :key="index">
+							<p v-for="(payer, index) in calculatedArrears.payer_name" :key="index">
 								{{payer}}
-							</div>
+							</p>
 						</div>
 						<div class="debt">
-							<div v-for="(debt, index) in calculatedArrears.debt" :key="index">
+							<p v-for="(debt, index) in calculatedArrears.debt" :key="index">
 								{{debt}} руб
-							</div>
+							</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			<button class="nav" type="button" @click="back()">Назад</button>
+			<v-btn
+					class="nav"
+					type="button"
+					@click="back()"
+			>
+				Назад
+			</v-btn>
+			<v-btn
+					class="nav"
+					type="button"
+					@click="home()"
+			>
+				К началу
+			</v-btn>
+			<v-btn
+					class="nav"
+					type="button"
+					@click="clean()"
+			>
+				Очистить
+			</v-btn>
 		</div>
 	</div>
 </template>
 
 <script setup>
-const router = useRouter();
 import {useRouter} from "vue-router";
+import {computed} from 'vue';
+import {useStorePerson} from "@/stores/PersonStore"
+import {useStoreMenu} from "@/stores/MenuStore"
 
-import {useStorePerson} from "../stores/PersonStore"
-import {useStoreMenu} from "../stores/MenuStore"
+const router = useRouter();
 
 const storePerson = useStorePerson();
 const storeMenu = useStoreMenu();
 
-
-import { computed } from 'vue';
-
 const calculatedPrices = computed(() => {
 	const personPrice = storePerson.inputsPerson;
 	const result = {price: [], person_name: []};
-	console.log(result);
 
 	for (let i = 0; i < storeMenu.inputsPrice.length; i++) {
-		let infoProduct = storeMenu.inputsPrice[i];
+		const infoProduct = storeMenu.inputsPrice[i];
 		const price = infoProduct.price;
 		const persons_length = infoProduct.personsId.length;
 
 		for (let j = 0; j < infoProduct.personsId.length; j++) {
-			let personId = infoProduct.personsId[j];
+			const personId = infoProduct.personsId[j];
 			const person = personPrice.find(item => item.id === personId);
 			const index = result.person_name.findIndex(val => val === person.name);
 			if (index !== -1) {
@@ -78,34 +95,35 @@ const calculatedPrices = computed(() => {
 	return result;
 });
 
-
 const calculatedArrears = computed(() => {
 	const personPrice = storePerson.inputsPerson;
 	const result = {debt: [], debtor_name: [], payer_name: []};
 
 	for (let i = 0; i < storeMenu.inputsPrice.length; i++) {
-		let infoProduct = storeMenu.inputsPrice[i];
+		const infoProduct = storeMenu.inputsPrice[i];
 		const price = infoProduct.price;
 		const persons_length = infoProduct.personsId.length;
 
 		for (let j = 0; j < infoProduct.personsId.length; j++) {
-			let personId = infoProduct.personsId[j];
-			let payerId = infoProduct.payerId;
+			const personId = infoProduct.personsId[j];
+			const payerId = infoProduct.payerId;
 			const person = personPrice.find(item => item.id === personId);
 			const payer = personPrice.find(item => item.id === payerId);
-			const arr = ['а','я']
+			const letters1 = ['а','я'];
+			const letters2= ['й', 'ь'];
 			if (payer.name !== person.name) {
 				const ch  = payer.name.slice(-1).toLowerCase();
-				if(arr.includes(ch)) {
+				if(letters1.includes(ch)) {
 					result.payer_name.push(payer.name.slice(0, -1) + 'е');
-					result.debtor_name.push(person.name);
-					result.debt.push(price / persons_length).toFixed(2);
+				}
+				else if(letters2.includes(ch)) {
+					result.payer_name.push(payer.name.slice(0, -1) + 'ю');
 				}
 				else {
 					result.payer_name.push(payer.name + 'у');
-					result.debtor_name.push(person.name);
-					result.debt.push(price / persons_length).toFixed(2);
 				}
+				result.debtor_name.push(person.name);
+				result.debt.push(Math.round(price / persons_length));
 			}
 		}
 	}
@@ -115,6 +133,17 @@ const calculatedArrears = computed(() => {
 const back = () => {
 	router.push('/menu');
 };
+
+const home = () => {
+	router.push('/');
+};
+
+const clean = () => {
+	localStorage.removeItem('piniaState');
+	storePerson.inputsPerson = [];
+	storeMenu.inputsPrice = [];
+	router.push('/');
+}
 </script>
 
 <style scoped>
